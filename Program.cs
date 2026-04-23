@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using RentalService.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Register database context to container
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
