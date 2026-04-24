@@ -1,0 +1,31 @@
+﻿@model Cart
+
+<div class="modal fade" id="cartModal">
+	<div class="modal-dialogue">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				<h5 class="modal-title"">Cart</h5>
+			</div>
+
+			<div class="modal-body">
+				@foreach(var item in Model.Items)
+				{
+					<div class="d-flex align-items-center">
+						<div>
+							<span>@item.Item.Name</span>
+							<p>@item.Item.Description</p>
+							<p>
+								<span>£@item.Item.Price.ToString("C")</span>
+								<span>Quantity: @item.Quantity</span>
+							</p>
+						</div>
+						<i class="bi bi-x-lg ms-auto remove-item" data-id="@item.Id"></i>
+					</div>
+				}
+			</div>
+
+		</div>
+	</div>
+</div>
