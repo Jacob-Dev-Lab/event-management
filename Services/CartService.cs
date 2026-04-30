@@ -26,8 +26,7 @@ namespace RentalService.Services
                 session.SetString("UserId", userId);
             }
 
-            var cart = _context.Carts
-            .FirstOrDefault(c => c.UserId == userId);
+            var cart = _context.Carts.FirstOrDefault(c => c.UserId == userId);
 
             if (cart == null)
             {
@@ -42,6 +41,25 @@ namespace RentalService.Services
             }
 
             return cart;
+        }
+
+        public void SaveCart(Cart cart)
+        {
+            var existingCart = _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefault(c => c.Id == cart.Id);
+
+            if (existingCart != null)
+            {
+                existingCart.Items = cart.Items;
+                _context.Carts.Update(existingCart);
+            }
+            else
+            {
+                _context.Carts.Add(cart);
+            }
+
+            _context.SaveChanges();
         }
     }
 }

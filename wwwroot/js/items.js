@@ -95,6 +95,7 @@
 	function buildRow(item) {
 		return `
 		<tr data-id="${item.id}">
+			<td>${item.imagePath ? `<img src="${item.imagePath}" width="40" heigth="25"/>` : ''}</td>
 			<td>${item.category}</td>
 			<td>${item.name}</td>
 			<td>${item.description}</td>
@@ -108,6 +109,7 @@
 
 	function fillEditForm(item) {
 		document.getElementById("EditId").value = item.id;
+		document.getElementById("EditImageFile").value = item.imagePath;
 		document.getElementById("EditName").value = item.name;
 		document.getElementById("EditCategory").value = item.category;
 		document.getElementById("EditDescription").value = item.description;

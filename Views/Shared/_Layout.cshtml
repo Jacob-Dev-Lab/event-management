@@ -7,41 +7,110 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/RentalService.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+    <!--Header(navigation bar)-->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RentalService</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm fixed-top">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-danger" href="/">
+                    <img src="/image/event-logo.jpg" alt="Babmak Logo" id="logo"/>
+                </a>
+
+                <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                <div id="nav" class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item me-lg-3"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item dropdown no-arrow me-lg-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button">
+                                Services
+                            </a>
+
+                            <ul class="dropdown-menu pt-md-3">
+                                <li id="first-dd-item"><a class="dropdown-item" href="/Services/Decoration">Decoration Service</a></li>
+                                <li><a class="dropdown-item" href="/Services/Equipment">Equipment Hire</a></li>
+                                <li><a class="dropdown-item" href="/Services/Management">Event Management</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li class="nav-item me-lg-3"><a class="nav-link" href="/Gallery">Gallery</a></li>
+                        <li class="nav-item me-lg-3"><a class="nav-link" href="/About">About Us</a></li>
+                        <li class="nav-item me-lg-4"><a class="nav-link" href="/Contact">Contact</a></li>
+                        <!--Cart-->
+                        <li class="nav-item me-2">
+                            <a class="nav-link position-relative" href="/Cart">
+                                <i class="fa-solid fa-cart-shopping fs-5"></i>
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - RentalService - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <main>
+		@RenderBody()
+    </main>
+	
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white py-5 mb-0">
+        <div class="container text-center text-md-start">
+
+            <div class="row gy-4">
+
+                <!-- Quick Links -->
+                <div class="col-12 col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/Services">Services</a></li>
+                        <li><a href="/About">About Us</a></li>
+                        <li><a href="/Contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="col-12 col-md-3">
+                    <h5>Services</h5>
+                    <ul class="list-unstyled">
+                        <li>Event Planning</li>
+                        <li>Equipment Hire</li>
+                        <li>Decoration</li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div class="col-12 col-md-3">
+                    <h5>Contact</h5>
+                    <p class="mb-1">Your City, Country</p>
+                    <p class="mb-1">+44 75 1234 5678</p>
+                    <p><a href="mailto:babmakstrides@gmail.com">babmakstrides@gmail.com</a></p>
+                </div>
+
+                <!-- Social -->
+                <div class="col-12 col-md-3">
+                    <h5>Follow Us</h5>
+
+                    <div class="d-flex justify-content-center justify-content-md-start gap-3 mt-3">
+                        <a href="#"><i class="fa-brands fa-facebook fs-5"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram fs-5"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter fs-5"></i></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center mt-4 pt-3 border-top">
+                <small>&copy; 2026 Babmak Events. All rights reserved.</small>
+            </div>
+
         </div>
     </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

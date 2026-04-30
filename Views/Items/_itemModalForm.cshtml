@@ -8,8 +8,12 @@
 			</div>
 
 			<div class="modal-body">
-				<form id="createItemForm">
+				<form id="createItemForm" enctype="multipart/form-data">
 					@Html.AntiForgeryToken()
+
+					<div class="input-group mb-2">
+						<input type="file" name="ImageFile" class="form-control" required/>
+					</div>
 
 					<div class="input-group mb-2">
 						<label for="Name" class="input-group-text">Name</label>
@@ -62,6 +66,8 @@
 					@Html.AntiForgeryToken()
 
 					<input type="hidden" id="EditId" name="Id" />
+					
+					<input type="file" id="EditImageFile" name="ImageFile" class="form-control mb-2" />
 
 					<input id="EditName" name="Name" class="form-control mb-2" />
 					<select id="EditCategory" name="Category" class="form-select mb-2">
