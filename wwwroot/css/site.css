@@ -140,6 +140,26 @@ p {
     color: #E91E63;
 }
 
+
+footer {
+    background-color: #1F1F1F;
+}
+
+footer a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #F06292;
+}
+
+footer h5 {
+    color: #F06292;
+    margin-bottom: 15px;
+}
+
+/* LANDING PAGE */
 .hero,
 .hero .carousel,
 .hero .carousel-inner,
@@ -191,35 +211,71 @@ p {
     color: #555;
 }
 
-.about-image img{
+.about-image img {
     width: 100%;
     height: 400px;
     object-fit: cover;
 }
 
-.gallery-item{
+.gallery-item {
     height: 30vh;
 }
 
-.gallery-item img{
+.gallery-item img {
     height: 100%;
     width: 100%
 }
 
-footer {
-    background-color: #1F1F1F;
+
+/* EQUIPMENT HIRE SERVICE*/
+.catalogue {
+    margin-top: -40px;
 }
 
-footer a {
-    color: #ccc;
-    text-decoration: none;
+#service-container {
+    transition: opacity 0.3s ease;
 }
 
-    footer a:hover {
-        color: #F06292;
-    }
+.equipment-service {
+    background: url('/image/dark-event.jpeg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    align-content: center;
+    height: 60vh;
+}
 
-footer h5 {
-    color: #F06292;
-    margin-bottom: 15px;
+.filter-btn {
+    border-radius: 50px;
+    padding: 8px 20px;
+    border: 1px solid #ddd;
+    background: white;
+    margin: 5px;
+    transition: 0.3s;
+}
+
+.filter-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.service-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+.service-img {
+    height: 35vh;
 }

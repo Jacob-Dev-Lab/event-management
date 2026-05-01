@@ -1,10 +1,10 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
 
-	const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
 	// ---------------- CREATE ----------------
 	document.getElementById("createItemForm")?.addEventListener("submit", async e => {
 		e.preventDefault();
+
+		const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
 		const form = e.target;
 		const res = await fetch("/Items/Create", {
@@ -16,7 +16,14 @@
 		const data = await res.json();
 		clearErrors();
 
-		if (!data.success) return showErrors(data.errors);
+		if (!data.success) {
+			if (data.errors) {
+				showErrors(data.errors);
+			} else if (data.error) {
+				alert(data.error);
+			}
+			return;
+		}
 
 		addRow(data.data);
 		form.reset();
@@ -26,6 +33,8 @@
 	// ---------------- EDIT CLICK ----------------
 	document.addEventListener("click", async e => {
 		if (!e.target.classList.contains("edit-btn")) return;
+
+		const token = document.querySelector('input[name="__RequestVerificationToken"]').value ?? "";
 
 		const id = e.target.dataset.id;
 
@@ -42,8 +51,10 @@
 	document.getElementById("editItemForm")?.addEventListener("submit", async e => {
 		e.preventDefault();
 
+		const token = document.querySelector('input[name="__RequestVerificationToken"]').value ?? "";
+
 		const form = e.target;
-		const id = document.getElementById("EditId").value;
+		const id = document.getElementById("editId").value;
 
 		const res = await fetch(`/Items/Update/${id}`, {
 			method: "POST",
@@ -52,9 +63,17 @@
 		});
 
 		const data = await res.json();
+
 		clearErrors();
 
-		if (!data.success) return showErrors(data.errors);
+		if (!data.success) {
+			if (data.errors) {
+				showErrors(data.errors);
+			} else if (data.error) {
+				alert(data.error);
+			}
+			return;
+		}
 
 		updateRow(data.data);
 		bootstrap.Modal.getInstance(document.getElementById("editItemModal")).hide();
@@ -63,6 +82,8 @@
 	// ---------------- DELETE ----------------
 	document.addEventListener("click", async e => {
 		if (!e.target.classList.contains("delete-btn")) return;
+
+		const token = document.querySelector('input[name="__RequestVerificationToken"]').value ?? "";
 
 		const id = e.target.dataset.id;
 
@@ -108,12 +129,15 @@
 	}
 
 	function fillEditForm(item) {
-		document.getElementById("EditId").value = item.id;
-		document.getElementById("EditImageFile").value = item.imagePath;
-		document.getElementById("EditName").value = item.name;
-		document.getElementById("EditCategory").value = item.category;
-		document.getElementById("EditDescription").value = item.description;
-		document.getElementById("EditPrice").value = item.price;
+		document.getElementById("editId").value = item.id;
+
+		// Set image preview (NOT file input)
+		document.getElementById("currentImage").src = item.imagePath;
+		document.getElementById("existingImage").value = item.imagePath;
+		document.getElementById("editName").value = item.name;
+		document.getElementById("editCategory").value = item.category;
+		document.getElementById("editDescription").value = item.description;
+		document.getElementById("editPrice").value = item.price;
 	}
 
 	function showErrors(errors) {

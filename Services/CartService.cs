@@ -17,7 +17,7 @@ namespace RentalService.Services
 
         public Cart GetCart()
         {
-            var session = _httpContextAccessor.HttpContext?.Session;
+            var session = (_httpContextAccessor.HttpContext?.Session) ?? throw new InvalidOperationException("Session is not available.");
             var userId = session.GetString("UserId");
 
             if (userId == null)

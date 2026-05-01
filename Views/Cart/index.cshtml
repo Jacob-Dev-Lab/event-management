@@ -13,7 +13,7 @@
 				@foreach(var item in Model.Items)
 				{
 					<div class="d-flex align-items-center">
-						<img src="@item.Item.ImagePath" alt="@item.Item.Name"/>
+						<img class="img-fluid rounded me-3" src="@item.Item.ImagePath" alt="@item.Item.Name"/>
 						<div>
 							<span>@item.Item.Name</span>
 							<p>@item.Item.Description</p>

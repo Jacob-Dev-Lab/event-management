@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RentalService.Data;
 using RentalService.Models;
 using RentalService.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [Route("Items")]
 public class ItemsController : Controller
@@ -23,32 +24,24 @@ public class ItemsController : Controller
 
     [HttpPost("Create")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Item item, IFormFile imageFile)
+    public async Task<IActionResult> Create(Item item, IFormFile ImageFile)
     {
         if (!ModelState.IsValid)
             return Json(new { success = false, errors = GetErrors() });
 
-        if (imageFile != null && imageFile.Length > 0)
+        if (ImageFile != null && ImageFile.Length > 0)
         {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-            var extension = Path.GetExtension(imageFile.FileName).ToLower();
+            var (isValid, error) = ValidateImage(ImageFile);
 
-            if (!allowedExtensions.Contains(extension))
-            {
-                return Json(new { success = false, error = "Invalid file type. Only images are allowed." });
-            }
+            if (!isValid)
+                return Json(new { success = false, error });
 
-            if (imageFile.Length > 5 * 1024 * 1024)
-            {
-                return Json(new { success = false, error = "File size exceeds the limit of 5MB." });
-            }
-
-            var fileName = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
+            var fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
 
             using(var stream = new FileStream(filePath, FileMode.Create))
             {
-                await imageFile.CopyToAsync(stream);
+                await ImageFile.CopyToAsync(stream);
             }
 
             item.ImagePath = "/images/" + fileName;
@@ -72,29 +65,24 @@ public class ItemsController : Controller
 
     [HttpPost("Update/{id}")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Update(int id, Item item, IFormFile imageFile)
+    public async Task<IActionResult> Update(int id, Item item, IFormFile? ImageFile, string ExistingImage)
     {
         if (!ModelState.IsValid)
-            return Json(new { success = false, errors = GetErrors() });
+        {
+            var errors = GetErrors();
+            return Json(new { success = false, errors });
+        }
 
         var existing = _context.Items.Find(id);
         if (existing == null)
             return Json(new { success = false });
 
-        if (imageFile != null && imageFile.Length > 0)
+        if (ImageFile != null && ImageFile.Length > 0)
         {
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-            var extension = Path.GetExtension(imageFile.FileName).ToLower();
+            var (isValid, error) = ValidateImage(ImageFile);
 
-            if (!allowedExtensions.Contains(extension))
-            {
-                return Json(new { success = false, error = "Invalid file type. Only images are allowed." });
-            }
-
-            if (imageFile.Length > 5 * 1024 * 1024)
-            {
-                return Json(new { success = false, error = "File size exceeds the limit of 5MB." });
-            }
+            if (!isValid)
+                return Json(new { success = false, error });
 
             if (!string.IsNullOrEmpty(existing.ImagePath))
             {
@@ -105,15 +93,19 @@ public class ItemsController : Controller
                 }
             }
 
-            var fileName = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
+            var fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
 
             using(var stream = new FileStream(filePath, FileMode.Create))
             {
-                await imageFile.CopyToAsync(stream);
+                await ImageFile.CopyToAsync(stream);
             }
 
             existing.ImagePath = "/images/" + fileName;
+        }
+        else
+        {
+            existing.ImagePath = ExistingImage;
         }
 
         existing.Name = item.Name;
@@ -179,22 +171,22 @@ public class ItemsController : Controller
         return RedirectToAction("Index", "Cart");
     }
 
-    private object ValidateImage(IFormFile imageFile)
+    private (bool isValid, string? error) ValidateImage(IFormFile ImageFile)
     {
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-        var extension = Path.GetExtension(imageFile.FileName).ToLower();
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+        var extension = Path.GetExtension(ImageFile.FileName).ToLower();
 
         if (!allowedExtensions.Contains(extension))
         {
-            return Json (new { success = false, error = "Invalid file type. Only images are allowed." });
+            return (false, "Invalid file type. Only images are allowed.");
         }
 
-        if (imageFile.Length > 5 * 1024 * 1024)
+        if (ImageFile.Length > 5 * 1024 * 1024)
         {
-            return Json (new { success = false, error = "File size exceeds the limit of 5MB." });
+            return (false, "File size exceeds the limit of 5MB.");
         }
 
-        return Json (new { success = true });
+        return (true, null);
     }
 
     private object MapItem(Item item)

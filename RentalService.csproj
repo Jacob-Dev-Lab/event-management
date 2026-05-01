@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\js\Items\**" />
+    <Content Remove="wwwroot\js\Items\**" />
+    <EmbeddedResource Remove="wwwroot\js\Items\**" />
+    <None Remove="wwwroot\js\Items\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\js\items.js" />
-    <None Include="wwwroot\js\Items\editItem.js" />
   </ItemGroup>
 
   <ItemGroup>

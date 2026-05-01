@@ -12,18 +12,18 @@
 					@Html.AntiForgeryToken()
 
 					<div class="input-group mb-2">
-						<input type="file" name="ImageFile" class="form-control" required/>
+						<input type="file" accept=".jpg,.jpeg,.png,.gif,.webp" name="ImageFile" class="form-control" required />
 					</div>
 
 					<div class="input-group mb-2">
-						<label for="Name" class="input-group-text">Name</label>
-						<input type="text" name="Name" id="Name" class="form-control" required/>
+						<label for="name" class="input-group-text">Name</label>
+						<input type="text" name="Name" id="name" class="form-control" required/>
 					</div>
 					<span class="text-danger" data-valmsg-for="Name"></span>
 
 					<div class="input-group mb-2">
-						<label for="Category" class="input-group-text">Category</label>
-						<select name="Category" id="Category" class="form-select" required>
+						<label for="category" class="input-group-text">Category</label>
+						<select name="Category" id="category" class="form-select" required>
 							<option value="">Select</option>
 							<option value="Table">Table</option>
 							<option value="Chair">Chair</option>
@@ -34,13 +34,13 @@
 					<span class="text-danger" data-valmsg-for="Category"></span>
 
 					<div class="input-group mb-2">
-						<label for="Description" class="input-group-text">Description</label>
-						<textarea name="Description" id="Description" class="form-control" required></textarea>
+						<label for="description" class="input-group-text">Description</label>
+						<textarea name="Description" id="description" class="form-control" required></textarea>
 					</div>
 
 					<div class="input-group mb-2">
-						<label for="Price" class="input-group-text">Price</label>
-						<input type="number" name="Price" id="Price" step="0.01" class="form-control" required />
+						<label for="price" class="input-group-text">Price</label>
+						<input type="number" name="Price" id="price" step="0.01" class="form-control" required />
 					</div>
 					<span class="text-danger" data-valmsg-for="Price"></span>
 
@@ -62,23 +62,33 @@
 			</div>
 
 			<div class="modal-body">
-				<form id="editItemForm">
+				<form id="editItemForm" class="justify-content-center" enctype="multipart/form-data">
 					@Html.AntiForgeryToken()
 
-					<input type="hidden" id="EditId" name="Id" />
-					
-					<input type="file" id="EditImageFile" name="ImageFile" class="form-control mb-2" />
+					<input type="hidden" id="editId" name="Id" />
 
-					<input id="EditName" name="Name" class="form-control mb-2" />
-					<select id="EditCategory" name="Category" class="form-select mb-2">
+					<div class="mb-3">
+						<label>Current Image</label><br />
+						<img id="currentImage" width="120" class="rounded shadow-sm" />
+					</div>
+
+					<!-- Hidden field to keep old image -->
+					<input type="hidden" id="existingImage" name="ExistingImage" />
+
+					<!-- File input (leave empty always) -->
+					<small class="text-muted">Leave empty to keep current image</small>
+					<input id="imageInput" type="file" accept=".jpg,.jpeg,.png,.gif,.webp" name="ImageFile" class="form-control mb-2" />
+
+					<input id="editName" name="Name" class="form-control mb-2" />
+					<select id="editCategory" name="Category" class="form-select mb-2">
 						<option>Table</option>
 						<option>Chair</option>
 						<option>Clothing</option>
 					</select>
-					<textarea id="EditDescription" name="Description" class="form-control mb-2"></textarea>
-					<input id="EditPrice" name="Price" type="number" step="0.01" class="form-control mb-2" />
+					<textarea id="editDescription" name="Description" class="form-control mb-2"></textarea>
+					<input id="editPrice" name="Price" type="number" step="0.01" class="form-control mb-2" />
 
-					<button class="btn btn-primary">Update</button>
+					<button type="submit" class="btn btn-primary">Update</button>
 				</form>
 			</div>
 
