@@ -101,6 +101,36 @@
 		}
 	});
 
+	// ---------------- CREATE MODAL IMAGE PREVIEW ----------------
+	document.getElementById("selectImage").addEventListener("change", function () {
+		const file = this.files[0];
+
+		if (file) {
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				document.getElementById("previewImage").src = e.target.result;
+			};
+
+			reader.readAsDataURL(file);
+		}
+	});
+
+	// ---------------- EDIT MODAL IMAGE PREVIEW ----------------
+	document.getElementById("imageInput").addEventListener("change", function () {
+		const file = this.files[0];
+
+		if (file) {
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				document.getElementById("currentImage").src = e.target.result;
+			};
+
+			reader.readAsDataURL(file);
+		}
+	});
+
 	// ---------------- HELPERS ----------------
 
 	function addRow(item) {

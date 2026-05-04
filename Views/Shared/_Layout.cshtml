@@ -43,6 +43,10 @@
                         <li class="nav-item me-2">
                             <a class="nav-link position-relative" href="/Cart">
                                 <i class="fa-solid fa-cart-shopping fs-5"></i>
+                                <span id="cart-count"
+                                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    0
+                                </span>
                             </a>
                         </li>
                     </ul>
@@ -114,7 +118,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/items.js"></script>
+
+    <script src="~/js/services.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

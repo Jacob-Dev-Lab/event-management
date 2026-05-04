@@ -142,20 +142,19 @@ public class ItemsController : Controller
     }
 
     [HttpPost("AddToCart")]
-    public IActionResult AddToCart(int id, int quantity)
+    public IActionResult AddToCart(int id, int quantity = 1)
     {
         var item = _context.Items.Find(id);
 
-        if (item == null) return NotFound();
+        if (item == null) return Json( new { success = false } );
 
         var cart = _cartService.GetCart();
 
-        var existingItem = cart.Items
-            .FirstOrDefault(i => i.ItemId == id);
+        var existingItem = cart.Items.FirstOrDefault(i => i.ItemId == id);
 
         if (existingItem != null)
         {
-            existingItem.Quantity++;
+            existingItem.Quantity += quantity;
         }
         else
         {
@@ -166,9 +165,28 @@ public class ItemsController : Controller
             });
         }
 
-        _context.SaveChanges();
+        _cartService.SaveCart(cart);
 
-        return RedirectToAction("Index", "Cart");
+        var totalCount = cart.Items.Sum(i => i.Quantity);
+
+        return Json(new 
+        { 
+            success = true, 
+            count = totalCount 
+        });
+    }
+
+    [HttpGet("GetCount")]
+    public IActionResult GetCount()
+    {
+        var cart = _cartService.GetCart();
+        var totalCount = cart.Items.Sum(i => i.Quantity);
+
+        return Json(new 
+        { 
+            success = true, 
+            count = totalCount
+        });
     }
 
     private (bool isValid, string? error) ValidateImage(IFormFile ImageFile)

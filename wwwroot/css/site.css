@@ -159,6 +159,25 @@ footer h5 {
     margin-bottom: 15px;
 }
 
+/* CART ANIMATION*/
+.animate-bounce {
+    animation: bounce 0.3s ease;
+}
+
+@keyframes bounce {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 /* LANDING PAGE */
 .hero,
 .hero .carousel,
@@ -277,5 +296,12 @@ footer h5 {
 }
 
 .service-img {
-    height: 35vh;
+    height: 40vh;
+}
+
+/** ITEM MODAL IMAGE PREVIEW **/
+.img-view {
+    display: block;
+    margin: auto;
+    border: dotted;
 }

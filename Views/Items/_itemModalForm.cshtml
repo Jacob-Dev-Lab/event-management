@@ -10,9 +10,12 @@
 			<div class="modal-body">
 				<form id="createItemForm" enctype="multipart/form-data">
 					@Html.AntiForgeryToken()
+					<div class="input-group mb-3">
+						<img id="previewImage" width="120" class="rounded shadow-sm img-view" />
+					</div>
 
 					<div class="input-group mb-2">
-						<input type="file" accept=".jpg,.jpeg,.png,.gif,.webp" name="ImageFile" class="form-control" required />
+						<input id="selectImage" type="file" accept=".jpg,.jpeg,.png,.gif,.webp" name="ImageFile" class="form-control" required />
 					</div>
 
 					<div class="input-group mb-2">
@@ -67,9 +70,9 @@
 
 					<input type="hidden" id="editId" name="Id" />
 
-					<div class="mb-3">
+					<div class="mb-3 text-center">
 						<label>Current Image</label><br />
-						<img id="currentImage" width="120" class="rounded shadow-sm" />
+						<img id="currentImage" width="120" class="rounded shadow-sm img-view" />
 					</div>
 
 					<!-- Hidden field to keep old image -->

@@ -26,7 +26,9 @@ namespace RentalService.Services
                 session.SetString("UserId", userId);
             }
 
-            var cart = _context.Carts.FirstOrDefault(c => c.UserId == userId);
+            var cart = _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefault(c => c.UserId == userId);
 
             if (cart == null)
             {
