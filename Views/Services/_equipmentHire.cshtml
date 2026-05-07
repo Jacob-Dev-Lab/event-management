@@ -1,0 +1,31 @@
+﻿@model List<Item>
+
+<section class="equipment-service text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Equipment Hire</h1>
+        <p class="lead fw-bold text-white">Rent high-quality equipment for your events</p>
+    </div>
+</section>
+
+<section id="equipment-catalogue" class="section catalogue">
+    <!-- SERVICES GRID -->
+    <div id="service-container" class="container">
+
+        <!-- FILTERS -->
+        <div class="text-center mb-5 p-0">
+
+            <h2 class="mb-5">Browse Services</h2>
+
+            <div class="filter-buttons text-center mb-5">
+                <button class="btn filter-btn active" data-category="">All</button>
+                <button class="btn filter-btn" data-category="Chair">Decoration</button>
+                <button class="btn filter-btn" data-category="Table">Equipment</button>
+                <button class="btn filter-btn" data-category="Management">Management</button>
+            </div>
+
+        </div>
+
+        <partial name="_serviceList" model="Model" />
+
+    </div>
+</section>

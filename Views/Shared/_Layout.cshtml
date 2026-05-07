@@ -40,8 +40,8 @@
                         <li class="nav-item me-lg-3"><a class="nav-link" href="/About">About Us</a></li>
                         <li class="nav-item me-lg-4"><a class="nav-link" href="/Contact">Contact</a></li>
                         <!--Cart-->
-                        <li class="nav-item me-2">
-                            <a class="nav-link position-relative" href="/Cart">
+                        <li class="nav-item me-2" id="cart-btn">
+                            <a class="nav-link position-relative">
                                 <i class="fa-solid fa-cart-shopping fs-5"></i>
                                 <span id="cart-count"
                                       class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -54,6 +54,31 @@
             </div>
         </nav>
     </header>
+
+    <!-- CART DRAWER -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-header">
+            <h5>Your Cart</h5>
+            <button id="close-cart" class="btn-close"></button>
+        </div>
+
+        <div id="cart-items" class="cart-body">
+            <p class="text-muted">Your cart is empty</p>
+        </div>
+
+        <div class="cart-footer">
+            <div class="d-flex justify-content-between mb-2">
+                <strong>Total:</strong>
+                <strong id="cart-total">$0.00</strong>
+            </div>
+
+            <a href="/Cart" class="btn btn-primary w-100">View Cart</a>
+        </div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div id="cart-overlay" class="cart-overlay"></div>
+
 
     <main>
 		@RenderBody()
@@ -119,7 +144,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    <script src="~/js/services.js"></script>
+    <script src="~/js/cart.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

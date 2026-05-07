@@ -1,25 +1,20 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using RentalService.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using RentalService.Models;
-using RentalService.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using RentalService.Services.Interfaces;
 
 [Route("Items")]
 public class ItemsController : Controller
 {
-    private readonly AppDbContext _context;
-    private readonly CartService _cartService;
+    private readonly IItemService _itemService;
 
-    public ItemsController(AppDbContext context, CartService cartService)
+    public ItemsController(IItemService itemService)
     {
-        _context = context;
-        _cartService = cartService;
+        _itemService = itemService;
     }
 
     public IActionResult Index()
     {
-        return View(_context.Items.ToList());
+        return View(_itemService.GetAll());
     }
 
     [HttpPost("Create")]
@@ -29,38 +24,23 @@ public class ItemsController : Controller
         if (!ModelState.IsValid)
             return Json(new { success = false, errors = GetErrors() });
 
-        if (ImageFile != null && ImageFile.Length > 0)
-        {
-            var (isValid, error) = ValidateImage(ImageFile);
+        var createdItem = await _itemService.Create(item, ImageFile);
 
-            if (!isValid)
-                return Json(new { success = false, error });
+        if (createdItem == null)
+            return Json(new { success = false });
 
-            var fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-
-            using(var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await ImageFile.CopyToAsync(stream);
-            }
-
-            item.ImagePath = "/images/" + fileName;
-        }
-
-        _context.Items.Add(item);
-        await _context.SaveChangesAsync();
-
-        return Json(new { success = true, data = MapItem(item) });
+        return Json(new { success = true, data = createdItem });
     }
 
     [HttpGet("Get/{id}")]
     public IActionResult Get(int id)
     {
-        var item = _context.Items.Find(id);
+        var item = _itemService.GetById(id);
+
         if (item == null)
             return Json(new { success = false });
 
-        return Json(new { success = true, data = MapItem(item) });
+        return Json(new { success = true, data = item });
     }
 
     [HttpPost("Update/{id}")]
@@ -73,152 +53,24 @@ public class ItemsController : Controller
             return Json(new { success = false, errors });
         }
 
-        var existing = _context.Items.Find(id);
-        if (existing == null)
-            return Json(new { success = false });
+        var updatedItem = await _itemService.Update(id, item, ImageFile, ExistingImage);
 
-        if (ImageFile != null && ImageFile.Length > 0)
-        {
-            var (isValid, error) = ValidateImage(ImageFile);
+        if (updatedItem == null)
+            return Json(new { success =  false });
 
-            if (!isValid)
-                return Json(new { success = false, error });
-
-            if (!string.IsNullOrEmpty(existing.ImagePath))
-            {
-                var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", existing.ImagePath.TrimStart('/'));
-                if (System.IO.File.Exists(oldPath))
-                {
-                    System.IO.File.Delete(oldPath);
-                }
-            }
-
-            var fileName = Guid.NewGuid() + Path.GetExtension(ImageFile.FileName);
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-
-            using(var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await ImageFile.CopyToAsync(stream);
-            }
-
-            existing.ImagePath = "/images/" + fileName;
-        }
-        else
-        {
-            existing.ImagePath = ExistingImage;
-        }
-
-        existing.Name = item.Name;
-        existing.Category = item.Category;
-        existing.Description = item.Description;
-        existing.Price = item.Price;
-
-        await _context.SaveChangesAsync();
-
-        return Json(new { success = true, data = MapItem(existing) });
+        return Json(new { success = true, data = updatedItem });
     }
 
     [HttpPost("Delete/{id}")]
     [ValidateAntiForgeryToken]
     public IActionResult Delete(int id)
     {
-        var item = _context.Items.Find(id);
-        if (item == null)
+        var isDeleted = _itemService.Delete(id);
+
+        if (!isDeleted)
             return Json(new { success = false });
 
-        if (!string.IsNullOrEmpty(item.ImagePath))
-        {
-            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", item.ImagePath.TrimStart('/'));
-            if (System.IO.File.Exists(imagePath))
-            {
-                System.IO.File.Delete(imagePath);
-            }
-        }
-
-        _context.Items.Remove(item);
-        _context.SaveChanges();
-
         return Json(new { success = true });
-    }
-
-    [HttpPost("AddToCart")]
-    public IActionResult AddToCart(int id, int quantity = 1)
-    {
-        var item = _context.Items.Find(id);
-
-        if (item == null) return Json( new { success = false } );
-
-        var cart = _cartService.GetCart();
-
-        var existingItem = cart.Items.FirstOrDefault(i => i.ItemId == id);
-
-        if (existingItem != null)
-        {
-            existingItem.Quantity += quantity;
-        }
-        else
-        {
-            cart.Items.Add(new CartItem
-            {
-                ItemId = id,
-                Quantity = quantity
-            });
-        }
-
-        _cartService.SaveCart(cart);
-
-        var totalCount = cart.Items.Sum(i => i.Quantity);
-
-        return Json(new 
-        { 
-            success = true, 
-            count = totalCount 
-        });
-    }
-
-    [HttpGet("GetCount")]
-    public IActionResult GetCount()
-    {
-        var cart = _cartService.GetCart();
-        var totalCount = cart.Items.Sum(i => i.Quantity);
-
-        return Json(new 
-        { 
-            success = true, 
-            count = totalCount
-        });
-    }
-
-    private (bool isValid, string? error) ValidateImage(IFormFile ImageFile)
-    {
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
-        var extension = Path.GetExtension(ImageFile.FileName).ToLower();
-
-        if (!allowedExtensions.Contains(extension))
-        {
-            return (false, "Invalid file type. Only images are allowed.");
-        }
-
-        if (ImageFile.Length > 5 * 1024 * 1024)
-        {
-            return (false, "File size exceeds the limit of 5MB.");
-        }
-
-        return (true, null);
-    }
-
-    private object MapItem(Item item)
-    {
-        return new
-        {
-            id = item.Id,
-            name = item.Name,
-            category = item.Category,
-            description = item.Description,
-            price = item.Price,
-            formattedPrice = item.Price.ToString("C"),
-            imagePath = item.ImagePath
-        };
     }
 
     private Dictionary<string, string[]> GetErrors()

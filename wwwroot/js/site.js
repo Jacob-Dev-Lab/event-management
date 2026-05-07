@@ -6,23 +6,34 @@
     });
 });
 
-/** Filter services by category **/
-$(document).on("click", ".filter-btn", function () {
 
-    var category = $(this).data("category");
+document.addEventListener("click", function (e) {
+    const btn = e.target.closest(".filter-btn");
+    if (!btn) return;
 
-    // Active state toggle
-    $(".filter-btn").removeClass("active");
-    $(this).addClass("active");
-    $("#service-container").css("opacity", "0.5");
+    var category = btn.dataset.category;
+
+    // Find currently active button
+    const currentActive = document.querySelector(".filter-btn.active");
+
+    // Remove active class from previous button
+    if (currentActive) {
+        currentActive.classList.remove("active");
+    }
+
+    // Add active class to clicked button
+    btn.classList.add("active");
+
+    // Remove focus from clicked button
+    btn.blur();
 
     $.ajax({
         url: '/Services/Filter',
         type: 'GET',
         data: { category: category },
         success: function (result) {
-            $("#service-container").html(result);
-            $("#service-container").css("opacity", "1");
+            $("#content").html(result);
+            $("#content").css("opacity", "1");
 
             // Smooth scroll to catalogue
             $('html, body').animate({
@@ -30,4 +41,4 @@ $(document).on("click", ".filter-btn", function () {
             }, 300);
         }
     });
-});
+})

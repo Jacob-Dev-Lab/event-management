@@ -159,9 +159,162 @@ footer h5 {
     margin-bottom: 15px;
 }
 
-/* CART ANIMATION*/
-.animate-bounce {
-    animation: bounce 0.3s ease;
+/******** CART DRAWER *********/
+
+/* Drawer */
+.cart-drawer {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    transition: right 0.35s cubic-bezier(.25,.8,.25,1);
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.35s ease;
+}
+
+/* Open state */
+.cart-drawer.open {
+    right: 0;
+}
+
+/* Overlay */
+.cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 1040;
+}
+
+.cart-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Header */
+.cart-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Body */
+.cart-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* Footer */
+.cart-footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.cart-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    gap: 10px;
+}
+
+.cart-item {
+    transition: all 0.2s ease;
+}
+
+.cart-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* TEXT */
+.cart-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* LAYOUT */
+.cart-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* CONTROLS ROW */
+.cart-controls {
+    width: 100%;
+}
+
+/* QUANTITY GROUP */
+.qty-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* BUTTONS */
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.qty-btn:hover {
+    background: #f3f3f3;
+}
+
+.qty-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* VALUE */
+.qty-value {
+    padding: 0 8px;
+    font-size: 13px;
+}
+
+/* PRICE */
+.item-price {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* REMOVE BUTTON */
+.remove-btn {
+    border: none;
+    background: transparent;
+    color: #999;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.remove-btn:hover {
+    color: #e91e63;
+}
+
+.fade {
+    opacity: 0.5;
 }
 
 @keyframes bounce {
@@ -170,13 +323,18 @@ footer h5 {
     }
 
     50% {
-        transform: scale(1.4);
+        transform: scale(1.3);
     }
 
     100% {
         transform: scale(1);
     }
 }
+
+.animate-bounce {
+    animation: bounce 0.3s;
+}
+
 
 /* LANDING PAGE */
 .hero,
@@ -251,7 +409,7 @@ footer h5 {
     margin-top: -40px;
 }
 
-#service-container {
+#content {
     transition: opacity 0.3s ease;
 }
 
@@ -261,7 +419,7 @@ footer h5 {
     background-position: center;
     color: white;
     align-content: center;
-    height: 60vh;
+    height: 80vh;
 }
 
 .filter-btn {
@@ -281,6 +439,13 @@ footer h5 {
 .filter-btn.active {
     background: var(--primary);
     color: white;
+}
+
+.filter-btn:focus,
+.filter-btn:active,
+.filter-btn:focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .service-card {
